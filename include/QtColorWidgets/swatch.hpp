@@ -3,7 +3,7 @@
  *
  * \author Mattia Basaglia
  *
- * \copyright Copyright (C) 2013-2017 Mattia Basaglia
+ * \copyright Copyright (C) 2013-2020 Mattia Basaglia
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -87,6 +87,18 @@ class QCP_EXPORT Swatch : public QWidget
     Q_PROPERTY(bool readOnly READ readOnly WRITE setReadOnly NOTIFY readOnlyChanged)
 
 
+    /**
+     * \brief Maximum size a color square can have
+     */
+    Q_PROPERTY(QSize maxColorSize READ maxColorSize WRITE setMaxColorSize NOTIFY maxColorSizeChanged)
+
+    /**
+     * \brief Whether to show an extra color to perform a "clear" operation.
+     *
+     * Clicking on this extra pseudo-color will emit signals like clicked() etc with an index of -1.
+     */
+    Q_PROPERTY(bool showClearColor READ showClearColor WRITE setShowClearColor NOTIFY showClearColorChanged)
+
 public:
     enum ColorSizePolicy
     {
@@ -124,6 +136,7 @@ public:
     QColor colorAt(const QPoint& p);
 
     QSize colorSize() const;
+    QSize maxColorSize() const;
     ColorSizePolicy colorSizePolicy() const;
     QPen border() const;
 
@@ -132,11 +145,14 @@ public:
 
     bool readOnly() const;
 
+    bool showClearColor() const;
+
 public Q_SLOTS:
     void setPalette(const ColorPalette& palette);
     void setSelected(int selected);
     void clearSelection();
     void setColorSize(const QSize& colorSize);
+    void setMaxColorSize(const QSize& colorSize);
     void setColorSizePolicy(ColorSizePolicy colorSizePolicy);
     void setBorder(const QPen& border);
     void setForcedRows(int forcedRows);
@@ -146,19 +162,23 @@ public Q_SLOTS:
      * \brief Remove the currently seleceted color
      **/
     void removeSelected();
+    void setShowClearColor(bool show);
 
 Q_SIGNALS:
     void paletteChanged(const ColorPalette& palette);
     void selectedChanged(int selected);
     void colorSelected(const QColor& color);
     void colorSizeChanged(const QSize& colorSize);
+    void maxColorSizeChanged(const QSize& colorSize);
     void colorSizePolicyChanged(ColorSizePolicy colorSizePolicy);
-    void doubleClicked(int index);
-    void rightClicked(int index);
+    void doubleClicked(int index, Qt::KeyboardModifiers modifiers);
+    void rightClicked(int index, Qt::KeyboardModifiers modifiers);
+    void clicked(int index, Qt::KeyboardModifiers modifiers);
     void forcedRowsChanged(int forcedRows);
     void forcedColumnsChanged(int forcedColumns);
     void readOnlyChanged(bool readOnly);
     void borderChanged(const QPen& border);
+    void showClearColorChanged(bool show);
 
 protected:
     bool event(QEvent* event) Q_DECL_OVERRIDE;
