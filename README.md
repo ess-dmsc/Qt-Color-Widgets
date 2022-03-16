@@ -1,6 +1,8 @@
 Color Widgets
 =============
 
+[![Conan package](https://img.shields.io/badge/conan-package-blue)](https://github.com/ess-dmsc/conan-Qt-Color-Widgets)
+
 Here is a color dialog that is more user-friendly than the default QColorDialog
 and several other color-related widgets
 
