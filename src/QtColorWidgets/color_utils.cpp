@@ -22,9 +22,11 @@
 #include "QtColorWidgets/color_utils.hpp"
 
 #include <QScreen>
-#include <QDesktopWidget>
 #include <QApplication>
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#include<QDesktopWidget>
+#endif
 
 QColor color_widgets::utils::color_from_lch(qreal hue, qreal chroma, qreal luma, qreal alpha )
 {
@@ -91,7 +93,13 @@ QColor color_widgets::utils::get_screen_color(const QPoint &global_pos)
     QScreen *screen = QApplication::screens().at(screenNum);
 #endif
 
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     WId wid = QApplication::desktop()->winId();
+#else
+    int wid = 0;
+#endif
+
     QImage img = screen->grabWindow(wid, global_pos.x(), global_pos.y(), 1, 1).toImage();
 
     return img.pixel(0,0);
