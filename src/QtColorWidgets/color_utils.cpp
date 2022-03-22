@@ -28,7 +28,7 @@
 #include<QDesktopWidget>
 #endif
 
-QColor color_widgets::utils::color_from_lch(qreal hue, qreal chroma, qreal luma, qreal alpha )
+QColor color_widgets::utils::color_from_lch(qt_color_type hue, qt_color_type chroma, qt_color_type luma, qt_color_type alpha )
 {
     qreal h1 = hue*6;
     qreal x = chroma*(1-qAbs(std::fmod(h1,2)-1));
@@ -55,7 +55,7 @@ QColor color_widgets::utils::color_from_lch(qreal hue, qreal chroma, qreal luma,
         alpha);
 }
 
-QColor color_widgets::utils::color_from_hsl(qreal hue, qreal sat, qreal lig, qreal alpha )
+QColor color_widgets::utils::color_from_hsl(qt_color_type hue, qt_color_type sat, qt_color_type lig, qt_color_type alpha )
 {
     qreal chroma = (1 - qAbs(2*lig-1))*sat;
     qreal h1 = hue*6;
