@@ -41,11 +41,16 @@ SET (${COLORWIDGET_PROJECT_NAME}_VERSION_PATCH 0)
 SET (${COLORWIDGET_PROJECT_NAME}_VERSION "${${COLORWIDGET_PROJECT_NAME}_VERSION_MAJOR}.${${COLORWIDGET_PROJECT_NAME}_VERSION_MINOR}.${${COLORWIDGET_PROJECT_NAME}_VERSION_PATCH}")
 
 
+#if(NOT QT_VERSION_MAJOR)
+#  set(QT_VERSION_MAJOR 5 CACHE STRING "Qt version to use (4, 5 or 6), defaults to 5")
+#endif()
+#find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets REQUIRED)
 
-if(NOT QT_VERSION_MAJOR)
-  set(QT_VERSION_MAJOR 5 CACHE STRING "Qt version to use (4, 5 or 6), defaults to 5")
+find_package(Qt6 COMPONENTS Core Widgets)
+if (NOT Qt6_FOUND)
+  find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 endif()
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets REQUIRED)
+
 
 
 # Auto generate moc files
@@ -141,7 +146,7 @@ add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/resources/${INCLUDE_PREFIX})
 add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/src/${INCLUDE_PREFIX})
 
 
-target_link_libraries (${TARGET_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries (${TARGET_NAME} PRIVATE Qt::Widgets)
 
 
 install_project (
@@ -172,4 +177,3 @@ add_custom_target(
     COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/gallery/*.png ${CMAKE_CURRENT_BINARY_DIR}/doxygen/html
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
-
