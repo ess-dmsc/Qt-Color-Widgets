@@ -25,7 +25,7 @@ target_link_libraries(
     ${SCREENSHOT_BINARY}
     PRIVATE
     ${COLOR_WIDGETS_LIBRARY}
-    Qt::Widgets
+    Qt5::Widgets
 )
 
 add_custom_target(gallery

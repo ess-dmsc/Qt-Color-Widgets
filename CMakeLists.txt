@@ -40,17 +40,7 @@ SET (${COLORWIDGET_PROJECT_NAME}_VERSION_MINOR 2)
 SET (${COLORWIDGET_PROJECT_NAME}_VERSION_PATCH 0)
 SET (${COLORWIDGET_PROJECT_NAME}_VERSION "${${COLORWIDGET_PROJECT_NAME}_VERSION_MAJOR}.${${COLORWIDGET_PROJECT_NAME}_VERSION_MINOR}.${${COLORWIDGET_PROJECT_NAME}_VERSION_PATCH}")
 
-
-find_package(Qt6 COMPONENTS Core Widgets)
-if (NOT Qt6_FOUND)
-  message(STATUS "Qt6 NOT found, trying Qt5")
-  find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
-else()
-  message(STATUS "Qt6 found")
-endif()
-
-message(STATUS "debug: Qt6_FOUND: ${Qt6_FOUND}")
-message(STATUS "debug: Qt5_FOUND: ${Qt5_FOUND}")
+find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 
 # Auto generate moc files
 set(CMAKE_AUTOMOC ON)
@@ -145,7 +135,7 @@ add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/resources/${INCLUDE_PREFIX})
 add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/src/${INCLUDE_PREFIX})
 
 
-target_link_libraries (${TARGET_NAME} PRIVATE Qt::Widgets)
+target_link_libraries (${TARGET_NAME} PRIVATE Qt5::Widgets)
 
 
 install_project (
