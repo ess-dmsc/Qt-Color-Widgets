@@ -43,9 +43,14 @@ SET (${COLORWIDGET_PROJECT_NAME}_VERSION "${${COLORWIDGET_PROJECT_NAME}_VERSION_
 
 find_package(Qt6 COMPONENTS Core Widgets)
 if (NOT Qt6_FOUND)
+  message(STATUS "Qt6 NOT found, trying Qt5")
   find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+else()
+  message(STATUS "Qt6 found")
 endif()
 
+message(STATUS "debug: Qt6_FOUND: ${Qt6_FOUND}")
+message(STATUS "debug: Qt5_FOUND: ${Qt5_FOUND}")
 
 # Auto generate moc files
 set(CMAKE_AUTOMOC ON)
