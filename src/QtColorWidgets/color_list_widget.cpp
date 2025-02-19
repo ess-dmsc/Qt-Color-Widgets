@@ -28,7 +28,6 @@ class ColorListWidget::Private
 {
 public:
     QList<QColor>               colors;
-    QSignalMapper               mapper;
     ColorWheel::ShapeEnum       wheel_shape = ColorWheel::ShapeTriangle;
     ColorWheel::ColorSpaceEnum  color_space = ColorWheel::ColorHSV;
     bool                        wheel_rotating = true;
@@ -38,7 +37,6 @@ ColorListWidget::ColorListWidget(QWidget *parent)
     : AbstractWidgetList(parent), p(new Private)
 {
     connect(this, &AbstractWidgetList::removed, this, &ColorListWidget::handle_removed);
-    connect(&p->mapper, SIGNAL(mapped(int)), SLOT(color_changed(int)));
 }
 
 ColorListWidget::~ColorListWidget()
@@ -106,9 +104,8 @@ void ColorListWidget::append_widget(int col)
     ColorSelector* cbs = new ColorSelector;
     cbs->setDisplayMode(ColorPreview::AllAlpha);
     cbs->setColor(p->colors[col]);
-    //connect(cbs,SIGNAL(colorChanged(QColor)),SLOT(emit_changed()));
-    p->mapper.setMapping(cbs,col);
-    connect(cbs,SIGNAL(colorChanged(QColor)),&p->mapper,SLOT(map()));
+    connect(cbs, &ColorSelector::colorChanged, [this, col] { color_changed(col); });
+
     connect(this, &ColorListWidget::wheelRotatingChanged, cbs, &ColorSelector::setWheelRotating);
     connect(this, &ColorListWidget::wheelShapeChanged, cbs, &ColorSelector::setWheelShape);
     connect(this, &ColorListWidget::colorSpaceChanged, cbs, &ColorSelector::setColorSpace);

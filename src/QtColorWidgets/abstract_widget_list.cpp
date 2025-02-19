@@ -20,29 +20,23 @@
  *
  */
 #include "QtColorWidgets/abstract_widget_list.hpp"
-#include <QToolButton>
-#include <QVBoxLayout>
+
 #include <QHeaderView>
 #include <QPushButton>
+#include <QSignalMapper>
+#include <QToolButton>
+#include <QVBoxLayout>
 
 class AbstractWidgetList::Private
 {
 public:
     QList<QWidget*> widgets;
-    QSignalMapper mapper_up;
-    QSignalMapper mapper_down;
-    QSignalMapper mapper_remove;
     QTableWidget *table;
 };
 
 AbstractWidgetList::AbstractWidgetList(QWidget *parent) :
     QWidget(parent), p(new Private)
 {
-    connect(&p->mapper_up,SIGNAL(mapped(QWidget*)),SLOT(up_clicked(QWidget*)));
-    connect(&p->mapper_down,SIGNAL(mapped(QWidget*)),SLOT(down_clicked(QWidget*)));
-    connect(&p->mapper_remove,SIGNAL(mapped(QWidget*)),SLOT(remove_clicked(QWidget*)));
-
-
     QVBoxLayout *verticalLayout = new QVBoxLayout(this);
     verticalLayout->setContentsMargins(0, 0, 0, 0);
     p->table = new QTableWidget(this);
@@ -67,8 +61,7 @@ AbstractWidgetList::AbstractWidgetList(QWidget *parent) :
                                               tr("Add New"));
 
     verticalLayout->addWidget(add_button);
-    connect(add_button,&QAbstractButton::clicked,this, &AbstractWidgetList::append);
-
+    connect(add_button, &QAbstractButton::clicked, this, &AbstractWidgetList::append);
 }
 
 AbstractWidgetList::~AbstractWidgetList()
@@ -115,9 +108,9 @@ void AbstractWidgetList::appendWidget(QWidget *w)
     int row = count();
     p->table->insertRow(row);
 
-    QWidget* b_up = create_button(w,&p->mapper_up,QStringLiteral("go-up"),tr("Move Up"));
-    QWidget* b_down = create_button(w,&p->mapper_down,QStringLiteral("go-down"),tr("Move Down"));
-    QWidget* b_remove = create_button(w,&p->mapper_remove,QStringLiteral("list-remove"),tr("Remove"));
+    QWidget* b_up     = create_button(w, QStringLiteral("go-up"),       tr("Move Up"));
+    QWidget* b_down   = create_button(w, QStringLiteral("go-down"),     tr("Move Down"));
+    QWidget* b_remove = create_button(w, QStringLiteral("list-remove"), tr("Remove"));
     if ( row == 0 )
         b_up->setEnabled(false);
     else
@@ -140,17 +133,26 @@ QWidget *AbstractWidgetList::widget(int i)
 }
 
 
-QWidget *AbstractWidgetList::create_button(QWidget *data, QSignalMapper *mapper,
-                                             QString icon_name,
-                                             QString text, QString tooltip) const
+QWidget *AbstractWidgetList::create_button(QWidget *data, QString icon_name,
+                                             QString text, QString tooltip)
 {
-
     QToolButton* btn = new QToolButton;
     btn->setIcon(QIcon::fromTheme(icon_name));
     btn->setText(text);
     btn->setToolTip(tooltip.isNull() ? btn->text() : tooltip );
-    connect(btn,SIGNAL(clicked()),mapper,SLOT(map()));
-    mapper->setMapping(btn,data);
+
+    if (text == "Move Up") {
+        connect(btn, &QToolButton::clicked, [this, btn] { up_clicked(btn); });
+    }
+
+    else if (text == "Move Down") {
+        connect(btn, &QToolButton::clicked, [this, btn] { down_clicked(btn); });
+    }
+
+    else if (text == "Remove") {
+        connect(btn, &QToolButton::clicked, [this, btn] { remove_clicked(btn); });
+    }
+
     return btn;
 }
 
