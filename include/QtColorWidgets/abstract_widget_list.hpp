@@ -33,7 +33,7 @@ class QCP_EXPORT AbstractWidgetList : public QWidget
 public:
     explicit AbstractWidgetList(QWidget *parent = 0);
     ~AbstractWidgetList();
-    
+
     /**
      *  \brief Get the number of items
      */
@@ -102,9 +102,10 @@ private:
     class Private;
     Private * const p;
 
-    QWidget* create_button(QWidget* data, QSignalMapper*mapper,
-                           QString icon_name, QString text,
-                           QString tooltip = QString()) const;
+    QWidget* create_button(QWidget* data,
+                        QString icon_name,
+                        QString text,
+                        QString tooltip = QString());
 };
 
 #endif // ABSTRACT_WIDGET_LIST_HPP
